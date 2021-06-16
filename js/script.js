@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
          }
       }
       const idInterval = setInterval(updateClock, 1000);
-      // updateClock();
+      updateClock();
    }
 
    countTimer('17 june 2021');
