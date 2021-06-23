@@ -48,13 +48,12 @@ window.addEventListener('DOMContentLoaded', () => {
    //Menu
    const toggleMenu = () => {
 
-      const btnMenu = document.querySelector('.menu'),
-         menu = document.querySelector('menu');
+      const menu = document.querySelector('menu');
 
       document.body.addEventListener('click', event => {
          event.preventDefault();
          const target = event.target;
-         if (target === btnMenu || target.parentNode === btnMenu) {
+         if (target.closest('.menu')) {
             menu.classList.add('active-menu');
          } else if (target.closest('menu')) {
             if (target.matches('.close-btn') || target.closest('li')) {
@@ -276,5 +275,78 @@ window.addEventListener('DOMContentLoaded', () => {
       startSlide(1500);
    };
    slider();
+
+   //Our team image
+   const ourTeamPhotoData = () => {
+      const command = document.getElementById('command');
+      let defaultImg = '';
+      const changeImg = event => {
+         const target = event.target;
+         if (event.type === 'mouseover' && target.closest('img')) {
+            defaultImg = target.src;
+            target.src = target.dataset.img;
+         } else if (event.type === 'mouseout' && target.closest('img')) {
+            target.src = defaultImg;
+         }
+      };
+      command.addEventListener('mouseover', changeImg);
+      command.addEventListener('mouseout', changeImg);
+   };
+   ourTeamPhotoData();
+
+   //Сheck input
+   const checkInput = () => {
+      //Calculator only allow numbers
+      const inputOnlyNumbers = () => {
+         const calcBlock = document.querySelector('.calc-block');
+         calcBlock.addEventListener('input', event => {
+            const target = event.target;
+            if (target.closest('.calc-square') || target.closest('.calc-count') || target.closest('.calc-day')) {
+               target.value = target.value.replace(/\D/g, '');
+            }
+         });
+      };
+      inputOnlyNumbers();
+      //checkForm for letters
+      const inputOnlyString = () => {
+         const footerInput = document.getElementById('form2'),
+            mainInput = document.getElementById('form1');
+         const checkInput = (event, closeTarget) => {
+            const target = event.target;
+            if (target.closest(`#form${closeTarget}-name`) || target.closest(`#form${closeTarget}-message`)) {
+               target.value = target.value.replace(/[^а-яё -]/ig, '');
+            } else if (target.closest(`#form${closeTarget}-email`)) {
+               target.value = target.value.replace(/[^a-z@_.!~*'-]/ig, '');
+            } else if (target.closest(`#form${closeTarget}-phone`)) {
+               target.value = target.value.replace(/[^0-9()-]/g, '');
+            }
+         };
+         const focusOut = (event, closeTarget) => {
+            const target = event.target;
+            target.value = target.value.replace(/(^[-\s]*|[-\s]*$)/g, '').replace(/-{2,}/g, '-').
+               replace(/\s{2,}/g, ' ');
+
+            if (target.closest(`#form${closeTarget}-name`)) {
+               const inputNames = target.value.split(' ');
+               target.value = inputNames.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(' ');
+            }
+         };
+
+         footerInput.addEventListener('input', event => {
+            checkInput(event, '2');
+         });
+         footerInput.addEventListener('blur', event => {
+            focusOut(event, '2');
+         }, true);
+         mainInput.addEventListener('input', event => {
+            checkInput(event, '1');
+         });
+         mainInput.addEventListener('blur', event => {
+            focusOut(event, '1');
+         }, true);
+      };
+      inputOnlyString();
+   };
+   checkInput();
 });
 
