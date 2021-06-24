@@ -388,7 +388,6 @@ window.addEventListener('DOMContentLoaded', () => {
          };
          if (!animate && typeValue && squareValue) {
             total = price * typeValue * squareValue * countValue * dayValue;
-            console.log('total: ', total);
             totalInterval = requestAnimationFrame(totalAnimate);
             animate = true;
          } else {
