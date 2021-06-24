@@ -29,7 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
       const updateClock = () => {
          const timer = getTimeRemaining();
          if (timer.timerRemaining > 0) {
-
             timerHours.textContent = addZero(timer.hours);
             timerMinutes.textContent = addZero(timer.minutes);
             timerSeconds.textContent = addZero(timer.seconds);
@@ -348,5 +347,67 @@ window.addEventListener('DOMContentLoaded', () => {
       inputOnlyString();
    };
    checkInput();
+
+   //Calculator
+   const calc = (price = 100) => {
+      const calcBlock = document.querySelector('.calc-block'),
+         calcType = document.querySelector('.calc-type'),
+         calcSquare = document.querySelector('.calc-square'),
+         calcDay = document.querySelector('.calc-day'),
+         calcCount = document.querySelector('.calc-count'),
+         totalValue = document.getElementById('total');
+      //Calculator Animate Total
+
+      const countSum = () => {
+         let total = 0,
+            countValue = 1,
+            dayValue = 1,
+            totalInterval,
+            animate = false,
+            count = 0;
+
+         const typeValue = calcType.options[calcType.selectedIndex].value,
+            squareValue = +calcSquare.value;
+
+         if (calcCount.value > 1) {
+            countValue += (calcCount.value - 1) / 10;
+         }
+         if (calcDay.value && calcDay.value < 5) {
+            dayValue *= 2;
+         } else if (calcDay.value && calcDay.value < 10) {
+            dayValue *= 1.5;
+         }
+         if (typeValue && squareValue) {
+            total = price * typeValue * squareValue * countValue * dayValue;
+         }
+         // Animation total sum
+         const totalAnimate = () => {
+            totalInterval = requestAnimationFrame(totalAnimate);
+            count += 100;
+            if (count <= total) {
+               totalValue.textContent = count;
+            } else {
+               cancelAnimationFrame(totalInterval);
+            }
+         };
+
+         if (!animate) {
+            totalInterval = requestAnimationFrame(totalAnimate);
+            animate = true;
+         } else {
+            cancelAnimationFrame(totalInterval);
+            animate = false;
+            count = 0;
+         }
+      };
+
+      calcBlock.addEventListener('change', event => {
+         const target = event.target;
+         if (target.matches('select') || target.matches('input')) {
+            countSum();
+         }
+      });
+   };
+   calc(100);
 });
 
