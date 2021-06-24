@@ -357,7 +357,6 @@ window.addEventListener('DOMContentLoaded', () => {
          calcCount = document.querySelector('.calc-count'),
          totalValue = document.getElementById('total');
       //Calculator Animate Total
-
       const countSum = () => {
          let total = 0,
             countValue = 1,
@@ -377,27 +376,26 @@ window.addEventListener('DOMContentLoaded', () => {
          } else if (calcDay.value && calcDay.value < 10) {
             dayValue *= 1.5;
          }
-         if (typeValue && squareValue) {
-            total = price * typeValue * squareValue * countValue * dayValue;
-         }
          // Animation total sum
          const totalAnimate = () => {
             totalInterval = requestAnimationFrame(totalAnimate);
-            count += 100;
+            count += total / 20;
             if (count <= total) {
                totalValue.textContent = count;
             } else {
                cancelAnimationFrame(totalInterval);
             }
          };
-
-         if (!animate) {
+         if (!animate && typeValue && squareValue) {
+            total = price * typeValue * squareValue * countValue * dayValue;
+            console.log('total: ', total);
             totalInterval = requestAnimationFrame(totalAnimate);
             animate = true;
          } else {
             cancelAnimationFrame(totalInterval);
             animate = false;
             count = 0;
+            totalValue.textContent = 0;
          }
       };
 
@@ -410,4 +408,3 @@ window.addEventListener('DOMContentLoaded', () => {
    };
    calc(100);
 });
-
