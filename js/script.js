@@ -300,7 +300,8 @@ window.addEventListener('DOMContentLoaded', () => {
          const calcBlock = document.querySelector('.calc-block');
          calcBlock.addEventListener('input', event => {
             const target = event.target;
-            if (target.closest('.calc-square') || target.closest('.calc-count') || target.closest('.calc-day')) {
+            if (target.value && (target.closest('.calc-square') ||
+               target.closest('.calc-count') || target.closest('.calc-day'))) {
                target.value = target.value.replace(/\D/g, '');
             }
          });
@@ -312,22 +313,30 @@ window.addEventListener('DOMContentLoaded', () => {
             mainInput = document.getElementById('form1');
          const checkInput = (event, closeTarget) => {
             const target = event.target;
-            if (target.closest(`#form${closeTarget}-name`) || target.closest(`#form${closeTarget}-message`)) {
-               target.value = target.value.replace(/[^а-яё -]/ig, '');
-            } else if (target.closest(`#form${closeTarget}-email`)) {
-               target.value = target.value.replace(/[^a-z@_.!~*'-]/ig, '');
-            } else if (target.closest(`#form${closeTarget}-phone`)) {
-               target.value = target.value.replace(/[^0-9()-]/g, '');
+            if (target.value) {
+               if (target.closest(`#form${closeTarget}-name`) || target.closest(`#form${closeTarget}-message`)) {
+                  target.value = target.value.replace(/[^а-яё -]/ig, '');
+               } else if (target.closest(`#form${closeTarget}-email`)) {
+                  target.value = target.value.replace(/[^a-z@_.!~*'-]/ig, '');
+               } else if (target.closest(`#form${closeTarget}-phone`)) {
+                  target.value = target.value.replace(/[^0-9()-]/g, '');
+               }
+            } else {
+               return;
             }
          };
          const focusOut = (event, closeTarget) => {
             const target = event.target;
-            target.value = target.value.replace(/(^[-\s]*|[-\s]*$)/g, '').replace(/-{2,}/g, '-').
-               replace(/\s{2,}/g, ' ');
+            if (target.value) {
+               target.value = target.value.replace(/(^[-\s]*|[-\s]*$)/g, '').replace(/-{2,}/g, '-').
+                  replace(/\s{2,}/g, ' ');
 
-            if (target.closest(`#form${closeTarget}-name`)) {
-               const inputNames = target.value.split(' ');
-               target.value = inputNames.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(' ');
+               if (target.closest(`#form${closeTarget}-name`)) {
+                  const inputNames = target.value.split(' ');
+                  target.value = inputNames.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(' ');
+               }
+            } else {
+               return;
             }
          };
 
