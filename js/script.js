@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
             timerRemaining = (dateStop - dateNow) / 1000,
             seconds = Math.floor(timerRemaining % 60),
             minutes = Math.floor((timerRemaining / 60) % 60),
-            hours = Math.floor(timerRemaining / 60 / 60) % 24;
+            hours = Math.floor(timerRemaining / 60 / 60);
          // day = Math.floor(timerRemaining / 60 / 60 / 24);
          return { timerRemaining, hours, minutes, seconds };
       };
@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const idInterval = setInterval(updateClock, 1000);
       updateClock();
    };
-   countTimer('11 july 2021');
+   countTimer('19 july 2021');
 
    //Menu
    const toggleMenu = () => {
@@ -310,7 +310,8 @@ window.addEventListener('DOMContentLoaded', () => {
       //checkForm for letters
       const inputOnlyString = () => {
          const footerInput = document.getElementById('form2'),
-            mainInput = document.getElementById('form1');
+            mainInput = document.getElementById('form1'),
+            popUpInput = document.getElementById('form3');
          const checkInput = (event, closeTarget) => {
             const target = event.target;
             if (target.value) {
@@ -354,6 +355,9 @@ window.addEventListener('DOMContentLoaded', () => {
          mainInput.addEventListener('blur', event => {
             focusOut(event, '1');
          }, true);
+         popUpInput.addEventListener('input', event => {
+            checkInput(event, '3');
+         });
       };
       inputOnlyString();
    };
