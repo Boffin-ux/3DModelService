@@ -125,7 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const menuLinks = document.querySelectorAll('menu a:not(.close-btn'),
          mainLink = document.querySelector('main > a');
 
-      const addScroll = (item) => {
+      const addScroll = item => {
          const blockID = item.getAttribute('href').substr(1);
 
          document.getElementById(blockID).scrollIntoView({
@@ -135,17 +135,15 @@ window.addEventListener('DOMContentLoaded', () => {
       };
 
       menuLinks.forEach(elem => {
-         elem.addEventListener('click', (event) => {
+         elem.addEventListener('click', event => {
             event.preventDefault();
             addScroll(elem);
          });
       });
-      mainLink.addEventListener('click', (event) => {
+      mainLink.addEventListener('click', event => {
          event.preventDefault();
          addScroll(mainLink);
       });
-
-
    };
    scrolled();
 
@@ -231,7 +229,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       slider.addEventListener('click', event => {
          event.preventDefault();
-         let target = event.target;
+         const target = event.target;
 
          if (!target.matches('.portfolio-btn, .dot')) {
             return;
@@ -452,28 +450,27 @@ window.addEventListener('DOMContentLoaded', () => {
          formFooter = document.getElementById('form2'),
          formPopup = document.getElementById('form3');
 
-
-
       const statusMessage = document.createElement('div');
       statusMessage.style.cssText = 'font-size: 2rem;';
       statusMessage.style.color = '#fff';
 
-      const postData = (body, outputData, errorData) => {
+      const postData = body => new Promise((resolve, reject) => {
          const request = new XMLHttpRequest();
          request.addEventListener('readystatechange', () => {
             if (request.readyState !== 4) {
                return;
             }
             if (request.status === 200) {
-               outputData();
+               resolve(statusMessage.textContent = successMessage);
             } else {
-               errorData(request.status);
+               reject(request.status);
             }
          });
          request.open('POST', './server.php');
          request.setRequestHeader('Content-Type', 'application/json');
          request.send(JSON.stringify(body));
-      };
+      });
+
       const addMessageForm = (event, form) => {
          event.preventDefault();
          const inputs = form.querySelectorAll('input');
@@ -485,14 +482,16 @@ window.addEventListener('DOMContentLoaded', () => {
          formData.forEach((val, key) => {
             body[key] = val;
          });
-         postData(body, () => {
-            statusMessage.textContent = successMessage;
-            inputs.forEach(item => item.value = '');
-         }, error => {
-            statusMessage.textContent = errorMessage;
-            inputs.forEach(item => item.value = '');
-            console.error(error);
-         });
+
+         postData(body)
+            .then(() => {
+               inputs.forEach(item => item.value = '');
+            })
+            .catch(error => {
+               statusMessage.textContent = errorMessage;
+               inputs.forEach(item => item.value = '');
+               console.error(error);
+            });
       };
       form.addEventListener('submit', event => addMessageForm(event, form));
       formFooter.addEventListener('submit', event => addMessageForm(event, formFooter));
