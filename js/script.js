@@ -90,7 +90,6 @@ window.addEventListener('DOMContentLoaded', () => {
       popupBtn.forEach(elem => {
          elem.addEventListener('click', () => {
             popup.style.display = 'block';
-            disableScroll();
             if (!animate) {
                PopUpInterval = requestAnimationFrame(PopUpAnimate);
                animate = true;
@@ -103,7 +102,6 @@ window.addEventListener('DOMContentLoaded', () => {
       popup.addEventListener('click', event => {
          let target = event.target;
          if (target.classList.contains('popup-close')) {
-            enableScroll();
             popup.style.display = 'none';
             cancelAnimationFrame(PopUpInterval);
             animate = false;
