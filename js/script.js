@@ -90,6 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
       popupBtn.forEach(elem => {
          elem.addEventListener('click', () => {
             popup.style.display = 'block';
+            disableScroll();
             if (!animate) {
                PopUpInterval = requestAnimationFrame(PopUpAnimate);
                animate = true;
@@ -102,6 +103,7 @@ window.addEventListener('DOMContentLoaded', () => {
       popup.addEventListener('click', event => {
          let target = event.target;
          if (target.classList.contains('popup-close')) {
+            enableScroll();
             popup.style.display = 'none';
             cancelAnimationFrame(PopUpInterval);
             animate = false;
@@ -454,21 +456,9 @@ window.addEventListener('DOMContentLoaded', () => {
       statusMessage.style.cssText = 'font-size: 2rem;';
       statusMessage.style.color = '#fff';
 
-      const postData = body => new Promise((resolve, reject) => {
-         const request = new XMLHttpRequest();
-         request.addEventListener('readystatechange', () => {
-            if (request.readyState !== 4) {
-               return;
-            }
-            if (request.status === 200) {
-               resolve(statusMessage.textContent = successMessage);
-            } else {
-               reject(request.status);
-            }
-         });
-         request.open('POST', './server.php');
-         request.setRequestHeader('Content-Type', 'application/json');
-         request.send(JSON.stringify(body));
+      const postData = formData => fetch('./server.php', {
+         method: 'POST',
+         body: formData,
       });
 
       const addMessageForm = (event, form) => {
@@ -476,15 +466,14 @@ window.addEventListener('DOMContentLoaded', () => {
          const inputs = form.querySelectorAll('input');
          form.appendChild(statusMessage);
          statusMessage.innerHTML = preload;
-         const formData = new FormData(form),
-            body = {};
+         const formData = new FormData(form);
 
-         formData.forEach((val, key) => {
-            body[key] = val;
-         });
-
-         postData(body)
-            .then(() => {
+         postData(formData)
+            .then(response => {
+               if (response.status !== 200) {
+                  throw new Error('status network not 200');
+               }
+               statusMessage.textContent = successMessage;
                inputs.forEach(item => item.value = '');
             })
             .catch(error => {
