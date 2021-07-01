@@ -1,5 +1,3 @@
-
-'use strict';
 const disableScroll = () => {
    document.body.dataset.scrollY = window.scrollY;
 
@@ -15,7 +13,6 @@ const disableScroll = () => {
       padding-right: ${scrollWidth}px;
    `;
 };
-
 const enableScroll = () => {
    document.body.style.cssText = '';
    window.scroll({
@@ -23,3 +20,4 @@ const enableScroll = () => {
    });
 };
 
+export { disableScroll, enableScroll };
