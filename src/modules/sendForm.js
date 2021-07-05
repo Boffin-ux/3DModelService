@@ -57,9 +57,72 @@ const sendForm = () => {
             console.error(error);
          });
    };
-   form.addEventListener('submit', event => addMessageForm(event, form));
-   formFooter.addEventListener('submit', event => addMessageForm(event, formFooter));
-   formPopup.addEventListener('submit', event => addMessageForm(event, formPopup));
+
+   const checkValid = (str, pattern) => {
+      const patterns = {
+         email: new RegExp('^([a-z0-9\-_.]{2,30}@[a-z]{2,10}\.[a-z]{2,5})?$', 'i'),
+         phone: new RegExp('^[0-9+() -]{8,18}$', 'i'),
+         name: new RegExp('^[а-яё ]{2,}$', 'i'),
+         message: new RegExp('[а-яё0-9.,:!?; \-]', 'ig'),
+      };
+      return patterns[pattern].test(str);
+   };
+
+   const validInfo = (formPhone, formName, formEmail) => {
+      if (!formPhone.value || !checkValid(formPhone.value, 'phone')) {
+         formPhone.style.border = '2px solid red';
+         return false;
+      } else if (!formName.value || !checkValid(formName.value, 'name')) {
+         formName.style.border = '2px solid red';
+         return false;
+      } else if (!formEmail.value || !checkValid(formEmail.value, 'email')) {
+         formEmail.style.border = '2px solid red';
+         return false;
+      } else {
+         formPhone.style.border = '';
+         formName.style.border = '';
+         formEmail.style.border = '';
+         return true;
+      }
+   };
+
+   form.addEventListener('submit', event => {
+      const formName = document.getElementById('form1-name'),
+         formEmail = document.getElementById('form1-email'),
+         formPhone = document.getElementById('form1-phone');
+      if (validInfo(formPhone, formName, formEmail)) {
+         addMessageForm(event, form);
+      } else {
+         form.appendChild(statusMessage);
+         statusMessage.textContent = "Введите корректное значение!";
+         event.preventDefault();
+      }
+   });
+   formFooter.addEventListener('submit', event => {
+      const formNameTwo = document.getElementById('form2-name'),
+         formEmailTwo = document.getElementById('form2-email'),
+         formPhoneTwo = document.getElementById('form2-phone');
+
+      if (validInfo(formPhoneTwo, formNameTwo, formEmailTwo)) {
+         addMessageForm(event, formFooter);
+      } else {
+         formFooter.appendChild(statusMessage);
+         statusMessage.textContent = "Введите корректное значение!";
+         event.preventDefault();
+      }
+   });
+   formPopup.addEventListener('submit', event => {
+      const formNameThree = document.getElementById('form3-name'),
+         formEmailThree = document.getElementById('form3-email'),
+         formPhoneThree = document.getElementById('form3-phone');
+      if (validInfo(formPhoneThree, formNameThree, formEmailThree)) {
+         addMessageForm(event, formPopup);
+      } else {
+         formPopup.appendChild(statusMessage);
+         statusMessage.textContent = "Введите корректное значение!";
+         event.preventDefault();
+      }
+   });
 };
 
 export default sendForm;

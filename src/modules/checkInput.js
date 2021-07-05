@@ -1,5 +1,6 @@
+import maskPhone from './maskPhone';
+
 const checkInput = () => {
-   //Calculator only allow numbers
    const inputOnlyNumbers = () => {
       const calcBlock = document.querySelector('.calc-block');
       calcBlock.addEventListener('input', event => {
@@ -11,8 +12,8 @@ const checkInput = () => {
       });
    };
    inputOnlyNumbers();
-   //checkForm for letters
-   const inputOnlyString = () => {
+
+   const inputCheckIt = () => {
       const footerInput = document.getElementById('form2'),
          mainInput = document.getElementById('form1'),
          popUpInput = document.getElementById('form3');
@@ -22,9 +23,9 @@ const checkInput = () => {
             if (target.closest(`#form${closeTarget}-name`)) {
                target.value = target.value.replace(/[^а-яё\s]/ig, '');
             } else if (target.closest(`#form${closeTarget}-email`)) {
-               target.value = target.value.replace(/[^a-z@_.!~*'-]/ig, '');
+               target.value = target.value.replace(/[^a-z0-9@_.-]/ig, '');
             } else if (target.closest(`#form${closeTarget}-phone`)) {
-               target.value = target.value.replace(/[^0-9+]/g, '');
+               maskPhone(`#form${closeTarget}-phone`);
             } else if (target.closest(`#form${closeTarget}-message`)) {
                target.value = target.value.replace(/[^а-яё\s0-9.?!,:;()""-]/g, '');
             }
@@ -32,21 +33,33 @@ const checkInput = () => {
             return;
          }
       };
+      const focusIn = (event, closeTarget) => {
+         const target = event.target;
+         if (target.closest(`#form${closeTarget}-phone`)) {
+            maskPhone(`#form${closeTarget}-phone`);
+         } else {
+            return;
+         }
+      };
       const focusOut = (event, closeTarget) => {
          const target = event.target;
-         if (target.value) {
+         if (target.value && !target.closest(`#form${closeTarget}-phone`)) {
             target.value = target.value.replace(/(^[-\s]*|[-\s]*$)/g, '').replace(/-{2,}/g, '-').
                replace(/\s{2,}/g, ' ');
-
-            if (target.closest(`#form${closeTarget}-name`)) {
-               const inputNames = target.value.split(' ');
-               target.value = inputNames.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(' ');
-            }
          } else {
             return;
          }
       };
 
+      footerInput.addEventListener('focus', event => {
+         focusIn(event, '2');
+      }, true);
+      mainInput.addEventListener('focus', event => {
+         focusIn(event, '1');
+      }, true);
+      popUpInput.addEventListener('focus', event => {
+         focusIn(event, '3');
+      }, true);
       footerInput.addEventListener('input', event => {
          checkInput(event, '2');
       });
@@ -63,7 +76,7 @@ const checkInput = () => {
          checkInput(event, '3');
       });
    };
-   inputOnlyString();
+   inputCheckIt();
 };
 
 export default checkInput;

@@ -13,6 +13,8 @@ import checkInput from './modules/checkInput';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
 
+//Сheck input
+checkInput();
 //Timer
 countTimer('19 july 2021');
 //Menu
@@ -28,9 +30,8 @@ addDots();
 slider();
 //Our team image
 ourTeamPhotoData();
-//Сheck input
-checkInput();
 //Calculator
 calc(100);
 //send-ajax-form
 sendForm();
+
