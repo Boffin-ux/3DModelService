@@ -1,3 +1,5 @@
+import { enableScroll } from './blockScrolled';
+
 const sendForm = () => {
    const errorMessage = 'Что-то пошло не так...',
       preload = `
@@ -63,12 +65,12 @@ const sendForm = () => {
          email: new RegExp('^([a-z0-9\-_.]{2,30}@[a-z]{2,10}\.[a-z]{2,5})?$', 'i'),
          phone: new RegExp('^[0-9+() -]{8,18}$', 'i'),
          name: new RegExp('^[а-яё ]{2,}$', 'i'),
-         message: new RegExp('[а-яё0-9.,:!?; \-]', 'ig'),
+         message: new RegExp('[а-яё0-9.,:!?;-]', 'ig'),
       };
       return patterns[pattern].test(str);
    };
 
-   const validInfo = (formPhone, formName, formEmail) => {
+   const validInfo = (formPhone, formName, formEmail, formMessage) => {
       if (!formPhone.value || !checkValid(formPhone.value, 'phone')) {
          formPhone.style.border = '2px solid red';
          return false;
@@ -78,6 +80,14 @@ const sendForm = () => {
       } else if (!formEmail.value || !checkValid(formEmail.value, 'email')) {
          formEmail.style.border = '2px solid red';
          return false;
+      } else if (formMessage) {
+         if (!formMessage.value || !checkValid(formMessage.value, 'message')) {
+            formMessage.style.border = '2px solid red';
+            return false;
+         } else {
+            formMessage.style.border = '';
+            return true;
+         }
       } else {
          formPhone.style.border = '';
          formName.style.border = '';
@@ -87,9 +97,11 @@ const sendForm = () => {
    };
 
    form.addEventListener('submit', event => {
+      event.preventDefault();
       const formName = document.getElementById('form1-name'),
          formEmail = document.getElementById('form1-email'),
          formPhone = document.getElementById('form1-phone');
+
       if (validInfo(formPhone, formName, formEmail)) {
          addMessageForm(event, form);
       } else {
@@ -101,9 +113,10 @@ const sendForm = () => {
    formFooter.addEventListener('submit', event => {
       const formNameTwo = document.getElementById('form2-name'),
          formEmailTwo = document.getElementById('form2-email'),
-         formPhoneTwo = document.getElementById('form2-phone');
+         formPhoneTwo = document.getElementById('form2-phone'),
+         formMessage = document.getElementById('form2-message');
 
-      if (validInfo(formPhoneTwo, formNameTwo, formEmailTwo)) {
+      if (validInfo(formPhoneTwo, formNameTwo, formEmailTwo, formMessage)) {
          addMessageForm(event, formFooter);
       } else {
          formFooter.appendChild(statusMessage);
@@ -112,11 +125,17 @@ const sendForm = () => {
       }
    });
    formPopup.addEventListener('submit', event => {
+      event.preventDefault();
       const formNameThree = document.getElementById('form3-name'),
          formEmailThree = document.getElementById('form3-email'),
          formPhoneThree = document.getElementById('form3-phone');
       if (validInfo(formPhoneThree, formNameThree, formEmailThree)) {
          addMessageForm(event, formPopup);
+         setTimeout(() => {
+            const popup = document.querySelector('.popup');
+            popup.style.display = 'none';
+            enableScroll();
+         }, 4500);
       } else {
          formPopup.appendChild(statusMessage);
          statusMessage.textContent = "Введите корректное значение!";

@@ -30,7 +30,7 @@ const calc = (price = 100) => {
          totalInterval = requestAnimationFrame(totalAnimate);
          count += total / 20;
          if (count <= total) {
-            totalValue.textContent = count;
+            totalValue.textContent = Math.round(count);
          } else {
             cancelAnimationFrame(totalInterval);
          }
@@ -44,6 +44,9 @@ const calc = (price = 100) => {
          animate = false;
          count = 0;
          totalValue.textContent = 0;
+         calcSquare.value = '';
+         calcDay.value = '';
+         calcCount.value = '';
       }
    };
 

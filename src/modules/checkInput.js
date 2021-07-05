@@ -46,6 +46,11 @@ const checkInput = () => {
          if (target.value && !target.closest(`#form${closeTarget}-phone`)) {
             target.value = target.value.replace(/(^[-\s]*|[-\s]*$)/g, '').replace(/-{2,}/g, '-').
                replace(/\s{2,}/g, ' ');
+
+            if (target.closest(`#form${closeTarget}-name`)) {
+               const inputNames = target.value.split(' ');
+               target.value = inputNames.map(item => `${item[0].toUpperCase()}${item.slice(1)}`).join(' ');
+            }
          } else {
             return;
          }
@@ -75,6 +80,9 @@ const checkInput = () => {
       popUpInput.addEventListener('input', event => {
          checkInput(event, '3');
       });
+      popUpInput.addEventListener('blur', event => {
+         focusOut(event, '3');
+      }, true);
    };
    inputCheckIt();
 };
