@@ -12,6 +12,7 @@ import ourTeamPhotoData from './modules/ourTeamPhotoData';
 import checkInput from './modules/checkInput';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
+import SliderCarusel from './modules/sliderCarusel';
 
 //Сheck input
 checkInput();
@@ -34,4 +35,27 @@ ourTeamPhotoData();
 calc(100);
 //send-ajax-form
 sendForm();
+// sliderCarusel
+const carousel = new SliderCarusel({
+   main: '.companies-wrapper',
+   wrap: '.companies-hor',
+
+   slidersToShow: 4,
+   infinity: true,
+
+   responsive: [{
+      breakpoint: 1024,
+      slidersToShow: 3
+   },
+   {
+      breakpoint: 768,
+      slidersToShow: 2
+   },
+   {
+      breakpoint: 576,
+      slidersToShow: 1
+   },
+   ]
+});
+carousel.init();
 
